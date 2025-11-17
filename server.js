@@ -20,6 +20,8 @@ server.ws("/", (client) => {
   // Figure out the client's id
   let id = global_id++;
 
+  console.log(`${id} connected`)
+
   send(client, {
     type: "welcome",
     id,
@@ -29,9 +31,9 @@ server.ws("/", (client) => {
 
   broadcast({ type: "connected", id });
 
-  connections.push(ws);
+  clients[id] = client;
 
-  ws.on("client_message", (dataString) => {
+  client.on("client_message", (dataString) => {
     let { content } = JSON.stringify(dataString);
     let message = { content, time: Date.now(), sender: id };
 
@@ -43,16 +45,15 @@ server.ws("/", (client) => {
     });
   });
 
-  ws.on("close", () => {
+  client.on("close", () => {
+    console.log(`${id} disconnected`)
     delete clients[id];
     broadcast({ type: "disconnected", id });
   });
 });
 
 // Start the server
-server.listen(port, () => {
-  console.log(`Listening on http://localhost:${port}`);
-});
+server.listen(port, "0.0.0.0", () => {});
 
 function send(client, message) {
   client.send(JSON.stringify(message));

@@ -8,14 +8,13 @@ export function App() {
   let [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    let socket = "REPLACE_THIS"; // Create a websocket
+    let socket = new WebSocket("ws://149.31.229.86:3000/"); // Create a websocket
 
     function handler({ data }) {
       let event = JSON.parse(data);
 
       if (event.type === "welcome") {
-        // How do you respond to this
-        // What other messages do you need to respond to?
+        console.log(event);
       }
     }
 
