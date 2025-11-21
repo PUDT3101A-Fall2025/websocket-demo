@@ -17,7 +17,8 @@ and sends this message:
   "messages": [{
       "content": <string>,
       "time": <number> // milliseconds since "unix epoch" 1/1/1970
-      "sender": <number>
+      "sender": <number>,
+      "dm_to": <number>
   }]
 }
 ```

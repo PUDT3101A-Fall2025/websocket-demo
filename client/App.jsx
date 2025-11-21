@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 export function App() {
   let [id, setId] = useState();
   let [connected, setConnected] = useState([]);
+
+  // Connected is something like: [0, 1, 2, 3]
+  // It could be: { 0: "Matthew", 1: "Arav", 2: "Anonymous" }
+  
   let [messages, setMessages] = useState([]);
 
   let [socket, setSocket] = useState(null);
@@ -20,13 +24,11 @@ export function App() {
         setConnected(event.connected);
       } else if (event.type === "server_message") {
         let { type, ...message } = event;
-        setMessages(messages => [...messages, message])
+        setMessages(messages => [...messages, message]);
       } else if (event.type === "connected") {
-        // EXERCISE 2: Update the list of connected users here
-        setConnected(connected => connected);
+        setConnected(connected => [...connected, event.id]);
       } else if (event.type === "disconnected") {
-        // EXERCISE 3: Update the list of connected users here
-        setConnected(connected => connected);
+        setConnected(connected => connected.filter(id => id !== event.id));
       }
     }
 
@@ -74,7 +76,7 @@ function Message({ sender, time, isLocal, content }) {
   return <div className={`message${isLocal ? " local" : ""}`}>
     <div className="sender">{sender}</div>
     {/* EXERCISE 4: Look up Javascript's Date object and figure out how to render this */}
-    <div className="time">{time}</div>
+    <div className="time">{new Date(time).toLocaleString()}</div>
     <p>{content}</p>
   </div>;
 }
